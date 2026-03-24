@@ -300,6 +300,23 @@ export const THEME_VERCEL: Theme = {
   `,
 }
 
+/**
+ * Built-in theme based on [iMBrace](https://www.imbrace.co/).
+ */
+export const THEME_IMBRACE: Theme = {
+  title: "iMBrace",
+  radius: "md",
+  primary: "#FA9917",
+  background: {
+    dark: "#111827",
+    light: "#f7f8fa",
+  },
+  font: {
+    family:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  },
+}
+
 // i really don't wanna use async local storage for this so get over it
 
 /**

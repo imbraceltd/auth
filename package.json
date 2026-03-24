@@ -4,6 +4,7 @@
   "type": "module",
   "workspaces": [
     "packages/openauth",
+    "services/*",
     "examples/issuer/*",
     "examples/client/*"
   ],

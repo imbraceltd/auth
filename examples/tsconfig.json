@@ -2,7 +2,7 @@
   "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
     "module": "NodeNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "NodeNext",
     "strict": true,
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"

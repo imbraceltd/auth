@@ -1,0 +1,14 @@
+{
+  "name": "@imbrace/auth-service",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot issuer.ts",
+    "start": "bun issuer.ts"
+  },
+  "dependencies": {
+    "@imbrace/openauth": "workspace:*",
+    "nodemailer": "8.0.5",
+    "pg": "^8.0.0"
+  }
+}

@@ -22,4 +22,15 @@ await Bun.build({
   root: "src",
   entrypoints: ["./src/ui/base.tsx"],
 })
+await Bun.build({
+  format: "esm",
+  outdir: "dist/esm",
+  external: [
+    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.peerDependencies),
+  ],
+  root: "src",
+  entrypoints: ["./src/ui/imbrace-layout.tsx"],
+})
 await $`tsc --outDir dist/types --declaration --emitDeclarationOnly --declarationMap`
+await $`cp src/ui/*.css dist/esm/ui/`

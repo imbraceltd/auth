@@ -178,6 +178,17 @@ export interface AuthorizeOptions {
    * If there's only one provider configured, the user will be redirected to that.
    */
   provider?: string
+  /**
+   * The preferred language for the UI, as a space-separated list of BCP47 language tags.
+   *
+   * @example
+   * ```ts
+   * {
+   *   ui_locales: "zh-HK en"
+   * }
+   * ```
+   */
+  ui_locales?: string
 }
 
 export interface AuthorizeResult {
@@ -588,6 +599,8 @@ export function createClient(input: ClientInput): Client {
       result.searchParams.set("response_type", response)
       result.searchParams.set("state", challenge.state)
       if (opts?.provider) result.searchParams.set("provider", opts.provider)
+      if (opts?.ui_locales)
+        result.searchParams.set("ui_locales", opts.ui_locales)
       if (opts?.pkce && response === "code") {
         const pkce = await generatePKCE()
         result.searchParams.set("code_challenge_method", "S256")

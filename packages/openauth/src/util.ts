@@ -6,7 +6,7 @@ export type Prettify<T> = {
 
 export function getRelativeUrl(ctx: Context, path: string) {
   const result = new URL(path, ctx.req.url)
-  result.host = ctx.req.header("x-forwarded-host") || result.host
+  result.host = ctx.req.header("x-forwarded-host") || ctx.req.header("x-custom-host") || result.host
   result.protocol = ctx.req.header("x-forwarded-proto") || result.protocol
   result.port = ctx.req.header("x-forwarded-port") || result.port
   return result.toString()

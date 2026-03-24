@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>OpenAuth Token Viewer</title>
+  <style>
+    body {
+      font-family: monospace;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 4px;
+    }
+
+    h3 {
+      margin-top: 24px;
+    }
+
+    .header {
+      color: #e74c3c;
+    }
+
+    .payload {
+      color: #2980b9;
+    }
+
+    .signature {
+      color: #27ae60;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>OpenAuth Token Viewer</h1>
+
+  <button onclick="login()">Login</button>
+  <button onclick="clearTokens()">Clear</button>
+
+  <div id="output"></div>
+
+  <script>
+    const ISSUER = 'http://localhost:3100'
+    const CLIENT_ID = 'test'
+    const REDIRECT_URI = window.location.origin + '/'
+
+    function login() {
+      const url = `${ISSUER}/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid`
+      window.location.href = url
+    }
+
+    function clearTokens() {
+      document.getElementById('output').innerHTML = '<p>Cleared.</p>'
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+
+    function decodeJwtPart(part) {
+      try {
+        return JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/')))
+      } catch { return null }
+    }
+
+    function renderJwt(label, token) {
+      if (!token) return ''
+      const parts = token.split('.')
+      const header = decodeJwtPart(parts[0])
+      const payload = decodeJwtPart(parts[1])
+
+      return `
+        <h3>${label}</h3>
+        <p><strong>Raw:</strong></p>
+        <pre>${token}</pre>
+        <p><strong>Header:</strong></p>
+        <pre class="header">${JSON.stringify(header, null, 2)}</pre>
+        <p><strong>Payload:</strong></p>
+        <pre class="payload">${JSON.stringify(payload, null, 2)}</pre>
+        ${payload?.exp ? `<p><strong>Expires:</strong> ${new Date(payload.exp * 1000).toLocaleString()}</p>` : ''}
+        ${payload?.iat ? `<p><strong>Issued:</strong> ${new Date(payload.iat * 1000).toLocaleString()}</p>` : ''}
+      `
+    }
+
+    async function exchangeCode(code) {
+      const res = await fetch('/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          grant_type: 'authorization_code',
+          code,
+          client_id: CLIENT_ID,
+          redirect_uri: REDIRECT_URI,
+        }),
+      })
+
+      if (!res.ok) {
+        const err = await res.text()
+        document.getElementById('output').innerHTML = `<h3>Error</h3><pre>${err}</pre>`
+        return
+      }
+
+      const data = await res.json()
+      let html = `<h3>Token Response</h3><pre>${JSON.stringify(data, null, 2)}</pre>`
+      html += renderJwt('Access Token', data.access_token)
+      if (data.id_token) html += renderJwt('ID Token', data.id_token)
+      if (data.refresh_token) html += `<h3>Refresh Token</h3><pre>${data.refresh_token}</pre>`
+
+      document.getElementById('output').innerHTML = html
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+
+    // Check for code in URL
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get('code')
+    if (code) {
+      document.getElementById('output').innerHTML = '<p>Exchanging code for tokens...</p>'
+      exchangeCode(code)
+    }
+  </script>
+</body>
+
+</html>

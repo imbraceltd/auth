@@ -78,7 +78,7 @@ export function Select(props?: SelectProps) {
                 data-color="ghost"
               >
                 {icon && <i data-slot="icon">{icon}</i>}
-                Continue with {match?.display || DISPLAY[type] || type}
+                Continue with {match?.display || DISPLAY[key] || DISPLAY[type] || type}
               </a>
             )
           })}
@@ -102,6 +102,10 @@ const DISPLAY: Record<string, string> = {
   x: "X",
   facebook: "Facebook",
   microsoft: "Microsoft",
+  "azure-ad": "Azure AD",
+  keycloak: "Keycloak",
+  okta: "Okta",
+  authentik: "Authentik",
   slack: "Slack",
 }
 
@@ -169,6 +173,18 @@ const ICON: Record<string, any> = {
       <path fill="#80CC28" d="M256 121.666H134.335V0H256z" />
       <path fill="#00ADEF" d="M121.663 256.002H0V134.336h121.663z" />
       <path fill="#FBBC09" d="M256 256.002H134.335V134.336H256z" />
+    </svg>
+  ),
+  "azure-ad": (
+    <svg
+      role="img"
+      viewBox="0 0 22 22"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M11 0L0 19.25H22L11 0ZM11 4.58333L18.7917 18.3333H3.20833L11 4.58333Z"
+        fill="#0078D4"
+      />
     </svg>
   ),
   facebook: (

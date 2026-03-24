@@ -1062,9 +1062,11 @@ export function issuer<
     )
       throw new UnauthorizedClientError(client_id, redirect_uri)
     await auth.set(c, "authorization", 60 * 60 * 24, authorization)
-    if (provider) return c.redirect(`/${provider}/authorize`)
+    const url = new URL(c.req.url)
+    if (provider) return c.redirect(`/${provider}/authorize${url.search}`)
     const providers = Object.keys(input.providers)
-    if (providers.length === 1) return c.redirect(`/${providers[0]}/authorize`)
+    if (providers.length === 1)
+      return c.redirect(`/${providers[0]}/authorize${url.search}`)
     return auth.forward(
       c,
       await select()(
