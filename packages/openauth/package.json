@@ -67,9 +67,6 @@
     "src",
     "dist"
   ],
-  "publishConfig": {
-    "@imbrace:registry": "https://npm.pkg.github.com/"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/imbraceltd/auth"

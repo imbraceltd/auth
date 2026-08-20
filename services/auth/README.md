@@ -144,52 +144,25 @@ DATABASE_URL=postgresql://postgres:postgres@postgres:5432/
 | `MongoDBStorage` | Alternative. Set `DATABASE_TYPE=mongodb`. |
 | `MySQLStorage` | Alternative. Set `DATABASE_TYPE=mysql`. |
 
-## Publishing `@imbrace/openauth`
+## Using `@imbrace/openauth`
 
-The core library lives in `packages/openauth/` and is published to the Imbrace the registry private npm registry as `@imbrace/openauth`.
+The core library lives in `packages/openauth/`. Build it and consume it from the workspace, or publish it to a registry of your choice.
 
-### Publish a new version
-
-```bash
-# 1. Bump version in packages/openauth/package.json
-# 2. Commit the change
-git add packages/openauth/package.json
-git commit -m "chore: bump @imbrace/openauth to vX.Y.Z"
-
-# 3. Tag and push — the registry CI auto-publishes on tag push
-git tag vX.Y.Z
-git push origin poc-new
-git push origin vX.Y.Z
-```
-
-the registry CI (`.registry-ci.yml`) will run `bun install --ignore-workspace && bun run build && npm publish` automatically from `packages/openauth/`.
-
-### Consuming the package in another project
-
-**1. Add `.npmrc`** to your project root:
-
-```
-@imbrace:registry=https://your-registry.example.com/
-//your-registry.example.com/:_authToken=${NPM_TOKEN}
-```
-
-Set `NPM_TOKEN` to a the registry personal access token with `read_api` scope.
-
-**2. Install:**
+### Build
 
 ```bash
-npm install @imbrace/openauth
-# or
-bun add @imbrace/openauth
+cd packages/openauth
+bun install
+bun run build
 ```
 
-**3. Import in issuer (server-side):**
+### Import in issuer (server-side)
 
 ```ts
 import { createIssuer } from "@imbrace/openauth/imbrace"
 ```
 
-**4. Import in client (frontend):**
+### Import in client (frontend)
 
 ```ts
 import { createClient } from "@imbrace/openauth/client"
